@@ -3,12 +3,45 @@ from sqlalchemy import Column, Integer, String
 from datetime import date
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session
+from pydantic import BaseModel, EmailStr,Field
+from datetime import date
+
 engine = create_engine("sqlite:///project_database.db",echo=True)
+
+
+
+class User(BaseModel):
+    id: int
+    name: str = Field(max_length=30,description="Name of user")
+    email: EmailStr
+    phone_no: int = Field( description="Phone no. of user")
+    salary: float = Field(gt=0)
+
+class Bill(BaseModel):
+    id: int
+    type: str = Field(max_length=30,description="Type of bill")
+    description: str = Field(max_length=60,description="Description of bill")
+    is_paid: bool = False
+    cost: float = Field(gt=0)
+    due_date: date
+
+class Event(BaseModel):
+    id: int
+    event_name: str = Field(max_length=30,description="name of event")
+    description: str = Field(max_length=60,description="Description of event")
+    cost: float = Field(gt=0)
+    event_date: date
+
+
+
+
+
+
 
 class Base(DeclarativeBase):
     pass
 
-class User(Base):
+class UserModel(Base):
     __tablename__= "user info"
 
     id: Mapped[int] = mapped_column(primary_key=True) #id INTEGER NOT NULL
@@ -20,7 +53,7 @@ class User(Base):
     # def __repr__(self) -> str:
     #     return f"User(id={self.id!r}, name={self.name!r}, salary={self.salary!r})"
 
-class Bill(Base):
+class BillModel(Base):
     __tablename__= "bills"
 
     id: Mapped[int] = mapped_column(primary_key=True)
@@ -30,7 +63,7 @@ class Bill(Base):
     isPaid: Mapped[bool] = mapped_column(default=False)
     date: Mapped[date]
 
-class Event(Base):
+class EventModel(Base):
     __tablename__= "events"
 
     id: Mapped[int] = mapped_column(primary_key=True)
