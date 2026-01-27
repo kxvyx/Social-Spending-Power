@@ -95,13 +95,15 @@ if __name__=="__main__":
         session.commit()
         print("Database created and users added!")
 
+'''For now ive kept these dictionaries here, import clashes ho rahe the
+is there a better place to keep them?'''
 
 user_dict = {
-    # 1:User(user_id=1, name="Jane", email="jane@gmail.com", phone_no=7896456676, salary=800000),
+    1:User(user_id=1, name="Jane", email="jane@gmail.com", phone_no=7896456676, salary=800000),
     # 2:User(user_id=2, name="Bob", email="bobbyy@gmail.com", phone_no=2395479845, salary=1000000),
     # 3:User(user_id=3, name="Ryu", email="ruru@gmail.com", phone_no=9665894343, salary=600000)
 }
 
 bill_dict = {
-    #key: [list of bills in dict form]
+    # bill_id: {bill} object
 }
