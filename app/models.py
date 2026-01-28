@@ -2,7 +2,6 @@ from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
 from sqlalchemy import Column, Integer, String, ForeignKey, func, Date
 from datetime import datetime
 from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
 from pydantic import BaseModel, EmailStr,Field
 from datetime import date
 from typing import Optional
@@ -81,29 +80,3 @@ class EventModel(Base):
     created_at: Mapped[date] = mapped_column(Date, server_default=func.current_date())
     updated_at: Mapped[date] = mapped_column(Date, server_default=func.current_date(), onupdate=func.current_date())
 
-if __name__=="__main__":
-    Base.metadata.create_all(engine)
-    
-    with Session(engine) as session:
-        shinchan = UserModel(name="Shinchan", email="shinchan@gmail.com",phone_no=1234567890,salary=10000)
-        batman = UserModel(name="Batman", email="iambatman@gmail.com",phone_no=9876543210,salary=90000)
-        jane = UserModel(name="Jane", email="jane@gmail.com", phone_no=7896456676, salary=800000)
-        bob = UserModel(name="Bob", email="bobbyy@gmail.com", phone_no=2395479845, salary=1000000)
-        ryu = UserModel(name="Ryu", email="ruru@gmail.com", phone_no=9665894343, salary=600000)
-
-        session.add_all([shinchan,batman,jane,bob,ryu])
-        session.commit()
-        print("Database created and users added!")
-
-'''For now ive kept these dictionaries here, import clashes ho rahe the
-is there a better place to keep them?'''
-
-user_dict = {
-    1:User(user_id=1, name="Jane", email="jane@gmail.com", phone_no=7896456676, salary=800000),
-    # 2:User(user_id=2, name="Bob", email="bobbyy@gmail.com", phone_no=2395479845, salary=1000000),
-    # 3:User(user_id=3, name="Ryu", email="ruru@gmail.com", phone_no=9665894343, salary=600000)
-}
-
-bill_dict = {
-    # bill_id: {bill} object
-}
