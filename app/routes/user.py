@@ -1,12 +1,12 @@
 from app.models import User, UserModel
 from fastapi.encoders import jsonable_encoder
 from fastapi import APIRouter, Response, status, HTTPException
-from app.utils.db_populate import user_dict,bill_dict
+from app.utils.db_populate import user_dict,bill_dict,event_dict
 from datetime import datetime
 
 router = APIRouter(tags=["users"])
 
-@router.get("/users/", status_code=200)
+@router.get("/users", status_code=200)
 def get_all_users():
     return user_dict
 
@@ -19,7 +19,7 @@ def get_user_by_id(user_id:int):
         )
     return user_dict[user_id]
 
-@router.post("/users/" ,status_code=201 )
+@router.post("/users" ,status_code=201 )
 def create_user(user: User):
     user_dict[user.user_id] = jsonable_encoder(user)
     return user
@@ -44,9 +44,12 @@ def update_user(user_id:int,user:User):
 def delete_user(user_id:int):
     if user_id in user_dict:
         remove_bills = [bill_id for bill_id in bill_dict if bill_dict[bill_id].get("user_id") == user_id]
+        remove_events = [event_id for event_id in event_dict if event_dict[event_id].get("user_id") == user_id]
+
         for bill_id in remove_bills:
-            del bill_dict[bill_id]
-            
+            del bill_dict[bill_id]    
+        for event_id in remove_events:
+            del event_dict[event_id]
         del user_dict[user_id]
         return Response(status_code=status.HTTP_204_NO_CONTENT)
     else:

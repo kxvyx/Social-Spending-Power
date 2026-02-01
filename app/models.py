@@ -31,6 +31,7 @@ class Bill(BaseModel):
 
 class Event(BaseModel):
     event_id: int
+    user_id: int = Field(description="user id of this event")
     event_name: str = Field(max_length=30,description="name of event")
     description: str = Field(max_length=60,description="Description of event")
     cost: float = Field(gt=0)

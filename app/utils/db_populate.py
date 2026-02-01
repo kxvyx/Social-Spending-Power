@@ -26,3 +26,5 @@ user_dict = {
 bill_dict = {
     # bill_id: {bill} object
 }
+
+event_dict = {}

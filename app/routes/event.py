@@ -1,94 +1,94 @@
 from fastapi import APIRouter, Response, status, HTTPException
 from fastapi.encoders import jsonable_encoder
-from app.models import Bill
-from app.utils.db_populate import bill_dict, user_dict
+from app.models import Event
+from app.utils.db_populate import bill_dict, user_dict, event_dict
 
-router = APIRouter(prefix="/users/{user_id}", tags=["bills"])
+router = APIRouter(prefix="/users/{user_id}", tags=["events"])
 
-@router.get("/bills", status_code=200)
-def get_user_bills(user_id:int , response = Response):
+@router.get("/events", status_code=200)
+def get_user_events(user_id:int , response = Response):
     if user_id not in user_dict:
         raise HTTPException(
         status_code = status.HTTP_404_NOT_FOUND,
         detail=f"User {user_id} not found"
         )
-    user_bills = {}
-    for bill_id , bill_data in bill_dict.items():
-        if bill_data.get("user_id") == user_id:
-            user_bills[bill_id] = bill_data
-    return user_bills
-     
-@router.get("/bills/{bill_id}", status_code=200)
-def get_user_bill_by_id(user_id:int,bill_id:int , response = Response):
+    all_user_events = {}
+    for event_id , event_data in event_dict.items():
+        if event_data.get("user_id") == user_id:
+            all_user_events[event_id] = event_data
+    return all_user_events
+
+@router.get("/events/{bill_id}", status_code=200)
+def get_user_event_by_id(user_id:int,event_id:int , response = Response):
     if user_id not in user_dict:
         raise HTTPException(
         status_code = status.HTTP_404_NOT_FOUND,
         detail=f"User {user_id} not found"
         )
-    if bill_id not in bill_dict:
+    if event_id not in event_dict:
         raise HTTPException(
         status_code = status.HTTP_404_NOT_FOUND,
-        detail=f"Bill {bill_id} not found"
+        detail=f"Event {event_id} not found"
         )
-    if bill_dict[bill_id].get("user_id") != user_id:
+    if event_dict[event_id].get("user_id") != user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="cannot access since user id doesnt match"
         )
-    return bill_dict[bill_id]
+    return event_dict[event_id]
 
-@router.post("/bills", status_code=201)
-def create_bill(user_id:int , bill:Bill):
+@router.post("/events", status_code=201)
+def create_event(user_id:int , event:Event):
     if user_id not in user_dict:
         raise HTTPException(
         status_code = status.HTTP_404_NOT_FOUND,
         detail=f"User {user_id} not found"
         )
-    bill_dict[bill.bill_id] = jsonable_encoder(bill)
-    return bill
+    event_dict[event.event_id] = jsonable_encoder(event)
+    return event
 
-@router.patch("/bills/{bill_id}" , status_code=200)
-def update_bill(user_id:int , bill_id:int , bill:Bill):
+@router.patch("/events/{event_id}" , status_code=200)
+def update_event(user_id:int , event_id:int , event:Event):
     if user_id not in user_dict:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User {user_id} not found"
         )
-    if bill_id not in bill_dict:
+    if event_id not in event_dict:
         raise HTTPException(
         status_code = status.HTTP_404_NOT_FOUND,
-        detail=f"Bill {bill_id} not found"
+        detail=f"event {event_id} not found"
         )
     
-    if bill_dict[bill_id].get("user_id") != user_id:
+    if event_dict[event_id].get("user_id") != user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="cannot update since user id doesnt match"
         )
-    stored_bill = bill_dict[bill_id]
-    stored_bill_data = Bill(**stored_bill)
+    stored_event = event_dict[event_id]
+    stored_event_data = Event(**stored_event)
 
-    update_data = bill.model_dump(exclude_unset=True)
-    updated_data = stored_bill_data.model_copy(update=update_data)
-    bill_dict[bill_id] = jsonable_encoder(updated_data)
-    return bill_dict[bill_id]
+    update_data = event.model_dump(exclude_unset=True)
+    updated_data = stored_event_data.model_copy(update=update_data)
+    event_dict[event_id] = jsonable_encoder(updated_data)
+    return event_dict[event_id]
 
-@router.delete("/bills/{bill_id}" , status_code=204)
-def delete_bill(user_id:int , bill_id:int ):
+@router.delete("/events/{event_id}" , status_code=204)
+def delete_event(user_id:int , event_id:int ):
     if user_id not in user_dict:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User {user_id} not found"
         )
-    if bill_id not in bill_dict:
+    if event_id not in event_dict:
         raise HTTPException(
         status_code = status.HTTP_404_NOT_FOUND,
-        detail=f"Bill {bill_id} not found"
+        detail=f"event {event_id} not found"
         )
-    if bill_dict[bill_id].get("user_id") != user_id:
+    if event_dict[event_id].get("user_id") != user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
             detail="cannot delete since user id doesnt match"
         )
-    del bill_dict[bill_id]
+    del event_dict[event_id]
     return Response(status_code=status.HTTP_204_NO_CONTENT)
