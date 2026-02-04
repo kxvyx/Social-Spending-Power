@@ -33,11 +33,11 @@ def get_user_bill_by_id(user_id:int,bill_id:int , response = Response):
     if bill_dict[bill_id].get("user_id") != user_id:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="cannot since user id doesnt match"
+            detail="cannot access since user id doesnt match"
         )
     return bill_dict[bill_id]
 
-@router.post("/bills/", status_code=201)
+@router.post("/bills", status_code=201)
 def create_bill(user_id:int , bill:Bill):
     if user_id not in user_dict:
         raise HTTPException(

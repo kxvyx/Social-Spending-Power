@@ -19,10 +19,44 @@ if __name__=="__main__":
 
 user_dict = {
     1:User(user_id=1, name="Jane", email="jane@gmail.com", phone_no=7896456676, salary=800000),
-    # 2:User(user_id=2, name="Bob", email="bobbyy@gmail.com", phone_no=2395479845, salary=1000000),
+    2:User(user_id=2, name="Bob", email="bobbyy@gmail.com", phone_no=2395479845, salary=1000000),
     # 3:User(user_id=3, name="Ryu", email="ruru@gmail.com", phone_no=9665894343, salary=600000)
 }
 
 bill_dict = {
-    # bill_id: {bill} object
+    1:{
+  "bill_id": 1,
+  "user_id": 1,
+  "type": "bill of user 1",
+  "description": "string",
+  "is_paid": False,
+  "cost": 1,
+  "due_date": "2026-02-04",
+  "created_at": "2026-02-04T10:45:09.406Z",
+  "updated_at": "2026-02-04T10:45:09.406Z"
+},
+    2:{
+  "bill_id": 2,
+  "user_id": 2,
+  "type": "bill of user 2",
+  "description": "string",
+  "is_paid": False,
+  "cost": 1,
+  "due_date": "2026-02-04",
+  "created_at": "2026-02-04T10:45:09.406Z",
+  "updated_at": "2026-02-04T10:45:09.406Z"
+}
+}
+
+group_dict = {
+    1:{
+  "group_id": 1,
+  "user_id": 1,
+  "group_name": "group of user 1",
+  "description": "string",
+  "cost": 3,
+  "list_of_bills": [1,2],
+  "created_at": "2026-02-04T10:45:56.231Z",
+  "updated_at": "2026-02-04T10:45:56.231Z"
+}
 }
