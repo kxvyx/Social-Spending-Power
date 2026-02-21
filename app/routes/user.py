@@ -30,9 +30,6 @@ def update_user(user_id:int,user:UserUpdate):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User {user_id} not found"
         )
-    if user_dict[user_id].user_id != user_id:
-        raise  HTTPException(status_code=403, 
-                             detail=f"User {user_id}, not authorized to update")
     stored_user_data = user_dict[user_id]
     update_data = user.model_dump(exclude_unset=True)
     update_data["updated_at"] = datetime.now()
@@ -48,9 +45,6 @@ def delete_user(user_id:int):
             status_code=status.HTTP_404_NOT_FOUND,
             detail=f"User {user_id} not found"
         )
-    if user_dict[user_id].user_id != user_id:
-        raise  HTTPException(status_code=403, 
-                             detail=f"User {user_id}, not authorized to delete")
     
     remove_bills = [bill_id for bill_id in bill_dict if bill_dict[bill_id].user_id == user_id]
     groups = [group_id for group_id in group_dict if group_dict[group_id].user_id == user_id]

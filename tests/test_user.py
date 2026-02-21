@@ -42,6 +42,24 @@ def test_create_user(mock_user_db):
     response = client.post("/users",json = new_user) 
     assert response.status_code == 201
    
+def test_update_correct_user_id(mock_user_db):
+    user_id = 1
+    update_data= {
+        "email": "updatingEmail@example.com",
+        "phone_no": 9923451833
+        }
+    response = client.patch(f"/users/{user_id}",json=update_data)
+    assert response.status_code == 200
+
+def test_update_wrong_user_id(mock_user_db):
+    user_id = 101
+    update_data= {
+        "email": "updatingEmail@example.com",
+        "phone_no": 9923451833
+        }
+    response = client.patch(f"/users/{user_id}",json=update_data)
+    assert response.status_code == 404
+
 def test_delete_correct_user_id(mock_user_db):
     user_id = 1
     response = client.delete(f"/users/{user_id}")
@@ -52,6 +70,3 @@ def test_delete_wrong_user_id(mock_user_db):
     response = client.delete(f"/users/{user_id}")
     assert response.status_code == 404
 
-def test_update_correct_user_id(mock_user_db):
-    user_id = 1
-    update_data= {}
