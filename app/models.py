@@ -18,6 +18,12 @@ class User(BaseModel):
     created_at: datetime = Field(default_factory =datetime.now)
     updated_at: datetime = Field(default_factory =datetime.now)
 
+class UserUpdate(BaseModel):
+    name: Optional[str] = Field(None,max_length=30)
+    email: Optional[EmailStr]=None
+    phone_no: Optional[int] = None
+    salary: Optional[float] = Field(None,gt=0)
+
 class Bill(BaseModel):
     bill_id: int
     user_id: int = Field(description="user id of this bill")
@@ -29,6 +35,13 @@ class Bill(BaseModel):
     created_at: datetime = Field(default_factory =datetime.now)
     updated_at: datetime = Field(default_factory =datetime.now)
 
+class BillUpdate(BaseModel):
+    type: Optional[str] = Field(None,max_length=30)
+    description: Optional[str] = Field(None,max_length=60)
+    is_paid: Optional[bool] = None
+    cost: Optional[float] = Field(None,gt=0)
+    due_date: Optional[date]=None
+
 class Group(BaseModel):
     group_id: int
     user_id: int = Field(description="user id of this group")
@@ -38,6 +51,11 @@ class Group(BaseModel):
     list_of_bills: Optional[List[int]] = Field(default=[],description="list of bill ids in this group")
     created_at: datetime = Field(default_factory =datetime.now)
     updated_at: datetime = Field(default_factory =datetime.now)
+
+class GroupUpdate(BaseModel):
+    group_name: Optional[str] = Field(None,max_length=30,description="name of group")
+    description: Optional[str] = Field(None,max_length=60,description="Description of group")
+    cost: Optional[float] = None
 
 
 class Base(DeclarativeBase):
