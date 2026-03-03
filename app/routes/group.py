@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Response, status, HTTPException
-from app.models import Group,GroupUpdate
+from app.models import Group
 from app.utils.db_populate import bill_dict, user_dict, group_dict
 from datetime import datetime
 
@@ -47,7 +47,7 @@ def create_group(user_id:int , group:Group):
     return group
 
 @router.patch("/groups/{group_id}" , status_code=200)
-def update_group(user_id:int , group_id:int , group:GroupUpdate):
+def update_group(user_id:int , group_id:int , group_update_data:dict):
     if user_id not in user_dict:
         raise HTTPException(status_code=404, detail="User not found")
     if group_id not in group_dict:
@@ -58,12 +58,16 @@ def update_group(user_id:int , group_id:int , group:GroupUpdate):
             status_code=status.HTTP_403_FORBIDDEN,
             detail=f"User {user_id}, not authorized to update"
         )
-    stored_group_data = group_dict[group_id]
-    update_data = group.model_dump(exclude_unset=True)
-    update_data["updated_at"] = datetime.now()
-    updated_data = stored_group_data.model_copy(update=update_data)
-    group_dict[group_id] = updated_data
-    return group_dict[group_id]
+    group = group_dict[group_id]
+    updated_group = group.model_copy(update=group_update_data)
+    group_dict[group_id] = updated_group
+    return updated_group
+    # stored_group_data = group_dict[group_id]
+    # update_data = group.model_dump(exclude_unset=True)
+    # update_data["updated_at"] = datetime.now()
+    # updated_data = stored_group_data.model_copy(update=update_data)
+    # group_dict[group_id] = updated_data
+    # return group_dict[group_id]
 
 @router.delete("/groups/{group_id}" , status_code=204)
 def delete_group(user_id:int , group_id:int ):

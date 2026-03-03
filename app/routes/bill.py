@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Response, status, HTTPException
-from app.models import Bill,BillUpdate
+from app.models import Bill
 from app.utils.db_populate import bill_dict, user_dict
 from datetime import datetime
 
@@ -52,7 +52,7 @@ def create_bill(user_id:int , bill:Bill):
     return bill
 
 @router.patch("/bills/{bill_id}" , status_code=200)
-def update_bill(user_id:int , bill_id:int , bill:BillUpdate):
+def update_bill(user_id:int , bill_id:int , bill_update_data:dict):
     if user_id not in user_dict:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
@@ -67,13 +67,16 @@ def update_bill(user_id:int , bill_id:int , bill:BillUpdate):
         status_code = status.HTTP_404_NOT_FOUND,
         detail=f"Bill {bill_id} not found"
         )
-    
-    stored_bill_data = bill_dict[bill_id]
-    update_data = bill.model_dump(exclude_unset=True)
-    update_data["updated_at"] = datetime.now()
-    updated_data = stored_bill_data.model_copy(update=update_data)
-    bill_dict[bill_id] = updated_data
-    return bill_dict[bill_id]
+    bill = bill_dict[bill_id]
+    updated_bill = bill.model_copy(update=bill_update_data)
+    bill_dict[bill_id] = updated_bill
+    return updated_bill
+    # stored_bill_data = bill_dict[bill_id]
+    # update_data = bill.model_dump(exclude_unset=True)
+    # update_data["updated_at"] = datetime.now()
+    # updated_data = stored_bill_data.model_copy(update=update_data)
+    # bill_dict[bill_id] = updated_data
+    # return bill_dict[bill_id]
 
 @router.delete("/bills/{bill_id}" , status_code=204)
 def delete_bill(user_id:int , bill_id:int ):
